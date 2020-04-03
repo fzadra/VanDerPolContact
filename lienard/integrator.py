@@ -30,16 +30,14 @@ cabac = [(D,0.5), (C,0.5), (A,0.5), (B,1), (A,0.5), (C,0.5), (D,0.5)]
 acbca = [(D,0.5), (A,0.5), (C,0.5), (B,1), (C,0.5), (A,0.5), (D,0.5)]
 
 mappers = [cbabc,bcacb,abcba,bacab,cabac,acbca]
-    
+
 def step1(system, dt, p, q, s, t, mapper=cbabc):
     for ap,coeff in mapper:
         p, q, s, t = ap(system, dt*coeff,p,q,s,t)
     return p, q, s, t
 
-def step2(system, dt, p, q, s, t, mapper=cbabc):
-    for ap,coeff in mapper:
-        p, q, s, t = ap(system, dt*coeff,p,q,s,t)
-    return p, q, s, t
+def step1b(system, dt, p, q, s, t):
+    return step1(system, dt, p, q, s, t, mapper=bcacb)
 
 # def step6(system, dt, p, q, s, t, a=ic.a_six, stepper=step1):
 #     return ic.step6(system, dt, p, q, s, t, a=a, stepper=stepper)
