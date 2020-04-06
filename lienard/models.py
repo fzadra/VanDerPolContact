@@ -34,7 +34,7 @@ def VanDerPol(epsilon, a, omega):
     return Lienard(f, fq, F, Fq)
 
 
-def FritzhughNagumo(a, b, c, forcing=lambda t: 0):
+def FitzHughNagumo(a, b, c, forcing=lambda t: 0):
     
     def f(q):
         return -(c-c*q**2-b/c)
