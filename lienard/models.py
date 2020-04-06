@@ -35,16 +35,17 @@ def VanDerPol(epsilon, a, omega):
     return Lienard(f, fq, F, Fq)
 
 
-def FitzHughNagumo(a, b, c, forcing=lambda t: 0):
+def FitzHughNagumo(a, b, c, forcing=lambda t: 0, dforcing=None):
     
     def f(q):
-        return -c+c*q**2+b/c
+        return -c*(1-q**2)+b/c
     def fq(q):
-        return +2.0*q
+        return +2.0*c*q
     def F(q,t):
-        return -a+(1-b)*q+(b/3.)*q**3-b*forcing(t)+derivative(forcing, t, dx=1e-10)
+        der = dforcing(t) if dforcing is not None else derivative(forcing, t, dx=1e-10)
+        return a+(1-b)*q+(b/3.)*q**3 - (b*forcing(t)+c*der)
     def Fq(q,t):
-        return (+1-b)+b*q**2
+        return (1-b)+b*q**2
     
     def qstoy(q,s,t=0):
         # q -> x
