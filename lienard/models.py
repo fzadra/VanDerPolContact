@@ -1,4 +1,5 @@
 import numpy as np
+from scipy.misc import derivative
 
 class Lienard:
     def __init__(self, f, fq, F, Fq):
@@ -37,11 +38,11 @@ def VanDerPol(epsilon, a, omega):
 def FitzHughNagumo(a, b, c, forcing=lambda t: 0):
     
     def f(q):
-        return -(c-c*q**2-b/c)
+        return -c+c*q**2+b/c
     def fq(q):
         return +2.0*q
     def F(q,t):
-        return -a+(1-b)*q+(b/3.)*q**3-b*forcing(t)
+        return -a+(1-b)*q+(b/3.)*q**3-b*forcing(t)+derivative(forcing, t, dx=1e-10)
     def Fq(q,t):
         return (+1-b)+b*q**2
     
