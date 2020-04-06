@@ -43,14 +43,15 @@ def FitzHughNagumo(a, b, c, forcing=lambda t: 0, dforcing=None):
         return +2.0*c*q
     def F(q,t):
         der = dforcing(t) if dforcing is not None else derivative(forcing, t, dx=1e-10)
-        return a+(1-b)*q+(b/3.)*q**3 - (b*forcing(t)+c*der)
+        return a + (1-b)*q + (b/3.)*q**3 - (b*forcing(t)+c*der)
     def Fq(q,t):
         return (1-b)+b*q**2
     
     def qstoy(q,s,t=0):
-        # q -> x
+        # q -> x, s -> w
         return s/c-q+(q**3)/3.-forcing(t)
     def xytos(x,y,t=0):
+        # s -> w
         return c *(x+y-(x**3)/3.+forcing(t))
     
     model = Lienard(f, fq, F, Fq)
