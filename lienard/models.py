@@ -35,23 +35,24 @@ def VanDerPol(epsilon, a, omega):
     return Lienard(f, fq, F, Fq)
 
 
-def FitzHughNagumo(a, b, c, forcing=lambda t: 0, dforcing=None):
+def FitzHughNagumo(a, b, c, forcing=None, dforcing=None):
+    forc = forcing if forcing is not None else (lambda _: 0.0)
+    derf = dforcing if dforcing is not None else (lambda t: derivative(forc, t, dx=1e-10))
     
     def f(q):
-        return -c*(1-q**2)+b/c
+        return b/c - c*(1-q**2)
     def fq(q):
-        return +2.0*c*q
+        return 2.0*c*q
     def F(q,t):
-        der = dforcing(t) if dforcing is not None else derivative(forcing, t, dx=1e-10)
-        return a + (1-b)*q + (b/3.)*q**3 - (b*forcing(t)+c*der)
+        return -a + (1-b)*q + (b/3.)*q**3 - (b*forc(t) + c*derf(t))
     def Fq(q,t):
-        return (1-b)+b*q**2
+        return (1-b) + b*q**2
     
+    # q <-> x, s <-> w    
     def qstoy(q,s,t=0):
-        # q -> x, s -> w
         return s/c-q+(q**3)/3.-forcing(t)
+    
     def xytos(x,y,t=0):
-        # s -> w
         return c *(x+y-(x**3)/3.+forcing(t))
     
     model = Lienard(f, fq, F, Fq)
