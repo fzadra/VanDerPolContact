@@ -22,6 +22,34 @@ def A(system, dt,p,q,s,t):
     s *= ex
     return p,q,s,t
 
+def multimapintegrate(stepper, system, tspan, p0, q0, s0,j, ttol=1e-12):
+    """
+    Integrate [system] with initial conditions [p0], [q0]
+    using the hamiltonian integrator provided in step.
+
+    [tspan] is usually [np.linspace(t0, tfinal, num=steps)]
+    """
+    dt = tspan[1] - tspan[0]
+    steps = len(tspan)
+    init = [p0, q0]
+
+    solpq = np.empty([steps, *np.shape(init)], dtype=np.float64)
+    sols = np.empty(steps, dtype=np.float64)
+    solpq[0] = np.array(init)
+    sols[0] = s0
+
+    for i in range(steps-1):
+        p, q = np.copy(solpq[i])
+        s = sols[i]
+        t = tspan[i]
+        pnew, qnew, snew, tnew = stepper(system, dt, p, q, s, t,j[i%2])
+        if abs(tnew-t-dt) > ttol:
+            warnings.warn(f"tnew-t-dt, dt inconsistency: {tnew-t-dt}, {dt}")
+        solpq[i+1] = [pnew, qnew]
+        sols[i+1] = snew
+
+    return solpq, sols, tspan
+
 cbabc = [(D,0.5), (C,0.5), (B,0.5), (A,1), (B,0.5), (C,0.5), (D,0.5)]
 bcacb = [(D,0.5), (B,0.5), (C,0.5), (A,1), (C,0.5), (B,0.5), (D,0.5)]
 abcba = [(D,0.5), (A,0.5), (B,0.5), (C,1), (B,0.5), (A,0.5), (D,0.5)]
