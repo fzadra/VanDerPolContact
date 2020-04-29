@@ -200,7 +200,7 @@ def step_lag4(system, dt, p, q, s, t):
     return (pnew, qnew, snew, t+dt)
 
 
-def integrate(stepper, system, tspan, p0, q0, s0, ttol=1e-12):
+def integrate(stepper, system, tspan, p0, q0, s0, ttol=1e-11):
     """
     Integrate [system] with initial conditions [p0], [q0]
     using the hamiltonian integrator provided in step.
