@@ -22,7 +22,7 @@ class Lienard:
         return self.Fq(q, t)
 
 
-def VanDerPol(epsilon, a, omega):
+def VanDerPol(epsilon, a=0, omega=0):
     def f(q):
         return -epsilon * (1 - q ** 2)
 
@@ -39,8 +39,10 @@ def VanDerPol(epsilon, a, omega):
 
 
 class VanDerPolLag:
-    def __init__(self, epsilon):
+    def __init__(self, epsilon, a=0, omega=0):
         self.epsilon = epsilon
+        self.a = a
+        self.omega = omega
 
     def d1l(self, q0, q1, dt):
         return -dt * (q0 + q1) / 4 - (q1 - q0) / dt
@@ -48,11 +50,11 @@ class VanDerPolLag:
     def d2l(self, q0, q1, dt):
         return -dt * (q0 + q1) / 4 + (q1 - q0) / dt
 
-    def fm(self, q0, q1, dt):
-        return self.epsilon / 2 * (q1 - q0) * (1 - (q0 + q1) ** 2 / 4)
+    def fm(self, q0, q1, t, dt):
+        return self.epsilon / 2 * (q1 - q0) * (1 - (q0 + q1) ** 2 / 4) + dt / 2 * self.a * np.cos(self.omega * t)
 
-    def fp(self, q0, q1, dt):
-        return self.fm(q0, q1, dt)
+    def fp(self, q0, q1, t, dt):
+        return self.fm(q0, q1, t, dt)
 
 
 class VanDerPolLag0:
@@ -65,10 +67,10 @@ class VanDerPolLag0:
     def d2l(self, q0, q1, dt):
         return (q1 - q0) / dt
 
-    def fm(self, q0, q1, dt):
-        return self.epsilon * (q1 - q0) * (1 - q0 ** 2)
+    def fm(self, q0, q1, t, dt):
+        return self.epsilon * (q1 - q0) * (1 - q0 ** 2) + dt * self.a * np.cos(self.omega * t)
 
-    def fp(self, q0, q1, dt):
+    def fp(self, q0, q1, t, dt):
         return 0
 
 
