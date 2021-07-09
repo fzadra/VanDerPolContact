@@ -51,10 +51,12 @@ class VanDerPolLag:
         return -dt * (q0 + q1) / 4 + (q1 - q0) / dt
 
     def fm(self, q0, q1, t, dt):
-        return self.epsilon / 2 * (q1 - q0) * (1 - (q0 + q1) ** 2 / 4) + dt / 2 * self.a * np.cos(self.omega * t)
+        return self.epsilon / 2 * (q1 - q0) * (
+            1 - (q0 + q1) ** 2 / 4
+        ) + dt / 2 * self.a * np.cos(self.omega * t)
 
     def fp(self, q0, q1, t, dt):
-        return self.fm(q0, q1, t, dt)
+        return self.epsilon / 2 * (q1 - q0) * (1 - (q0 + q1) ** 2 / 4)
 
 
 class VanDerPolLag0:
@@ -68,7 +70,9 @@ class VanDerPolLag0:
         return (q1 - q0) / dt
 
     def fm(self, q0, q1, t, dt):
-        return self.epsilon * (q1 - q0) * (1 - q0 ** 2) + dt * self.a * np.cos(self.omega * t)
+        return self.epsilon * (q1 - q0) * (1 - q0 ** 2) + dt * self.a * np.cos(
+            self.omega * t
+        )
 
     def fp(self, q0, q1, t, dt):
         return 0
